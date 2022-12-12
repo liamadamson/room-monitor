@@ -54,7 +54,7 @@ def test_step(timestep_s):
         return monitor.DHT22Data(60.0, 25.0)
     
     with patch.object(monitor_instance, "_fetch_data", side_effect=fake_fetch_data), patch("time.sleep"), patch.object(monitor_instance, "_print_to_screen"):
-        monitor_instance._step(timestep_s)
+        monitor_instance._step()
 
         monitor_instance._fetch_data.assert_called_with(22)
         monitor_instance._print_to_screen.assert_called_with(25.0, 60.0)

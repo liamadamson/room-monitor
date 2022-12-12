@@ -14,6 +14,7 @@ class Monitor:
         if timestep_s < 30:
             raise ValueError(f"Timestep must be at least 30 seconds.")
 
+        self.timestep_s = timestep_s
     
     def _print_to_screen(self, temp_degc: float, humidity_pc: float) -> None:
         print(f"Temp: {temp_degc} deg C, Humidity: {humidity_pc} %")
@@ -23,7 +24,7 @@ class Monitor:
         humidity, temp = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, gpio_pin)
         return DHT22Data(humidity, temp)
 
-    def _step(self, timestep_s):
+    def _step(self):
         dht22_data = self._fetch_data(22)
         self._print_to_screen(dht22_data.temperature_degc, dht22_data.humidity_percent)
-        time.sleep(timestep_s)
+        time.sleep(self.timestep_s)

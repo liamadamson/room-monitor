@@ -1,5 +1,6 @@
 import dataclasses
 import Adafruit_DHT
+import time
 
 @dataclasses.dataclass
 class DHT22Data:
@@ -21,3 +22,8 @@ class Monitor:
     def _fetch_data(self, gpio_pin: int):
         humidity, temp = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, gpio_pin)
         return DHT22Data(humidity, temp)
+
+    def _step(self, timestep_s):
+        dht22_data = self._fetch_data(22)
+        self._print_to_screen(dht22_data.temperature_degc, dht22_data.humidity_percent)
+        time.sleep(timestep_s)

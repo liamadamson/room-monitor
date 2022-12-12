@@ -1,8 +1,8 @@
-import pytest
-import time
 from unittest.mock import patch
-from dht22_monitor import monitor
+import time
+import pytest
 import Adafruit_DHT
+from dht22_monitor import monitor
 
 
 @pytest.fixture(name="monitor_instance")
@@ -32,7 +32,7 @@ def test_print_to_screen(monitor_instance, capsys):
 def test_fetch_data(monitor_instance, gpio_pin):
     humidity_pc = 60.0
     temperature_degc = 25.0
-    
+
     expected = monitor.DHT22Data(humidity_pc, temperature_degc)
 
     def fake_return(*args):
@@ -52,7 +52,7 @@ def test_step(timestep_s):
 
     def fake_fetch_data(*args):
         return monitor.DHT22Data(60.0, 25.0)
-    
+
     with patch.object(monitor_instance, "_fetch_data", side_effect=fake_fetch_data), patch("time.sleep"), patch.object(monitor_instance, "_print_to_screen"):
         monitor_instance._step()
 

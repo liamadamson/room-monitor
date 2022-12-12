@@ -1,3 +1,5 @@
+"""Used to continuously monitor and print data from a DHT22 sensor."""
+
 import dataclasses
 import time
 import Adafruit_DHT # type: ignore
@@ -5,11 +7,17 @@ import Adafruit_DHT # type: ignore
 
 @dataclasses.dataclass
 class DHT22Data:
+    """
+    A dataclass containing humidity and temperature readings from the DHT22 sensor.
+    """
     humidity_percent: float
     temperature_degc: float
 
 
 class Monitor:
+    """
+    Used to monitor and print humidity and temperature data from a DHT22 sensor.
+    """
 
     def __init__(self, timestep_s: float) -> None:
         if timestep_s < 30:
@@ -18,6 +26,9 @@ class Monitor:
         self.timestep_s = timestep_s
 
     def run(self) -> None:
+        """
+        Runs the monitor.
+        """
         while True:
             self._step()
 

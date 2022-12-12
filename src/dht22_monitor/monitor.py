@@ -16,9 +16,12 @@ class Monitor:
 
         self.timestep_s = timestep_s
     
+    def run(self):
+        while True:
+            self._step()
+
     def _print_to_screen(self, temp_degc: float, humidity_pc: float) -> None:
         print(f"Temp: {temp_degc} deg C, Humidity: {humidity_pc} %")
-
 
     def _fetch_data(self, gpio_pin: int):
         humidity, temp = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, gpio_pin)

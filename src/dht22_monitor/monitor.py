@@ -23,7 +23,7 @@ class Monitor:
         if timestep_s < 30:
             raise ValueError(f"Timestep must be at least 30 seconds.")
 
-        self.timestep_s = timestep_s
+        self._timestep_s = timestep_s
         self._gpio_pin = gpio_pin
 
     def run(self) -> None:
@@ -43,4 +43,4 @@ class Monitor:
     def _step(self) -> None:
         dht22_data = self._fetch_data(self._gpio_pin)
         self._print_to_screen(dht22_data.temperature_degc, dht22_data.humidity_percent)
-        time.sleep(self.timestep_s)
+        time.sleep(self._timestep_s)

@@ -1,3 +1,5 @@
 pytest
 mypy
 pylint
+smbus
+pimoroni-bme280

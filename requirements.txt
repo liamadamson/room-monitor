@@ -1,5 +1,5 @@
 pytest
 mypy
 pylint
-smbus
+smbus2
 pimoroni-bme280

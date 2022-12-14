@@ -17,4 +17,4 @@ RUN pip install --install-option="--force-pi" Adafruit_DHT
 
 ENV PYTHONPATH = "${PYTHONPATH}:/code/src"
 
-CMD ["python -m dht22_monitor"]
+CMD ["python -m room_monitor"]

@@ -1,3 +1,3 @@
 # To be run from the main folder.
 
-docker run --rm -it -v "$PWD/src":"/code/src" dht22-monitor mypy --strict ./src/
+docker run --rm -it -v "$PWD/src":"/code/src" room-monitor mypy --strict ./src/

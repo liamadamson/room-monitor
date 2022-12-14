@@ -2,7 +2,7 @@ from unittest.mock import patch
 import time
 import pytest
 import Adafruit_DHT
-from dht22_monitor import monitor
+from room_monitor import monitor
 
 
 @pytest.fixture(name="monitor_instance")

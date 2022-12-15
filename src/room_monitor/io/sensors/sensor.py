@@ -1,12 +1,12 @@
 """
-Contains an abstract sensor.
+Defines an abstract sensor.
 """
 
 from typing import Any
 import abc
 
 
-class AbstractSensor(abc.ABC):
+class Sensor(abc.ABC):
 
     @abc.abstractmethod
     def read(self) -> Any:

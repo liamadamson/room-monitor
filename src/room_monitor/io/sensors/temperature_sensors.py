@@ -2,10 +2,11 @@
 Contains temperature readers.
 """
 
+from room_monitor.io.sensors import abstract_sensor
 import bme280 # type: ignore
 
 
-class BME280TemperatureSensor():
+class BME280TemperatureSensor(abstract_sensor.AbstractSensor):
     """
     Used to read the temperature, in degrees C, from a BME280 temperature sensor.
     """

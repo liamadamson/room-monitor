@@ -3,3 +3,5 @@ mypy
 pylint
 smbus2
 pimoroni-bme280
+RPi.GPIO
+Mock.GPIO

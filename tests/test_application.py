@@ -21,8 +21,6 @@ def test_step(mock_print_data, mock_sleep, step_time_s):
     temperature = 35.0
     humidity = 40.0
 
-
-
     app = application.Application()
 
     app.step(step_time_s, temperature, humidity)

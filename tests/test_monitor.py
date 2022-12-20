@@ -30,3 +30,17 @@ def test_step(mock_time, timestep_s, capsys):
         assert captured.out == expected
 
         mock_time.assert_called_with(timestep_s)
+
+
+@pytest.mark.parametrize("timestep_s", [-15, 0])
+def test_bad_timestep(timestep_s):
+    sensors = {
+        "fake_sensor": fake_sensor.FakeSensor()
+    }
+    with pytest.raises(ValueError):
+        monitor.Monitor(sensors, timestep_s)
+
+
+def test_empty_sensor_dict():
+    with pytest.raises(ValueError):
+        monitor.Monitor(dict(), 10.0)

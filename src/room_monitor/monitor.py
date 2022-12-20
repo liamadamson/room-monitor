@@ -1,5 +1,5 @@
 """
-Contains the main Application object.
+Contains a Monitor object, used for reading from sensors and printing to the screen.
 """
 
 from typing import Dict
@@ -8,11 +8,23 @@ import time
 
 class Monitor:
     """
-    Main application object.
-    """
+    Example usage.
 
-    def __init__(self, sensor_dict: Dict[str, sensor.Sensor], timestep_s: float) -> None:
-        self._sensors: Dict[str, sensor.Sensor] = sensor_dict
+        sensors = {
+            "sensor_1": FakeSensor(),
+            "sensor_2": FakeSensor()
+        }
+        monitor = Monitor(sensors, 10.0)
+
+        while True:
+            monitor.step()
+    """
+    def __init__(self, sensors: Dict[str, sensor.Sensor], timestep_s: float) -> None:
+        """
+        :param sensors: Dictionary of sensors to monitor.
+        :timestep_s: Time between succesive sensor reads, in seconds.
+        """
+        self._sensors: Dict[str, sensor.Sensor] = sensors
         self._timestep_s = timestep_s
 
     def step(self) -> None:

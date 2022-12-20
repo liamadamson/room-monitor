@@ -12,17 +12,18 @@ import smbus2
 
 
 def get_sensors() -> Dict[str, sensor.Sensor]:
-
     i2c_bus = smbus2.SMBus(1)
     bme280_device = bme280.BME280(i2c_dev=i2c_bus)
 
+    # Edit here to add or remove sensors.
     return {
         "Temperature": temperature_sensors.BME280TemperatureSensor(bme280_device),
         "Humidity": humidity_sensors.BME280HumiditySensor(bme280_device)
     }
 
-sensors = get_sensors()
-app = monitor.Monitor(sensors, timestep_s=10.0)
+def main() -> None:
+    sensors = get_sensors()
+    room_monitor = monitor.Monitor(sensors, timestep_s=10.0)
 
-while True:
-    app.step()
+    while True:
+        room_monitor.step()

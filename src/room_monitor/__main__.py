@@ -2,7 +2,7 @@
 Main application entry point.
 """
 
-from room_monitor import application
+from room_monitor import monitor
 from room_monitor.io import inputs
 from room_monitor.io.sensors import temperature_sensors
 from room_monitor.io.sensors import humidity_sensors
@@ -21,6 +21,6 @@ def get_inputs_dataclass() -> inputs.Inputs:
     )
 
 inputs_dataclass = get_inputs_dataclass()
-app = application.Application(inputs_dataclass, timestep_s=10.0)
+app = monitor.Monitor(inputs_dataclass, timestep_s=10.0)
 app.run()
 

@@ -1,4 +1,4 @@
-from room_monitor import application
+from room_monitor import monitor
 from room_monitor.io import inputs  
 from room_monitor.io.sensors import fake_sensor
 from unittest.mock import patch
@@ -15,7 +15,7 @@ def test_step(mock_time, timestep_s, temp_degc, humid_rh, capsys):
         fake_sensor.FakeSensor()
     )
     
-    app = application.Application(inputs_dataclass, timestep_s)
+    app = monitor.Monitor(inputs_dataclass, timestep_s)
 
     def fake_temp_return():
         return temp_degc

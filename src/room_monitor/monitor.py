@@ -5,7 +5,7 @@ Contains the main Application object.
 from room_monitor.io import inputs
 import time
 
-class Application:
+class Monitor:
     """
     Main application object.
     """

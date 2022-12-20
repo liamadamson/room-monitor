@@ -9,7 +9,7 @@ def test_bme280_humidity_sensor_get_humidity(humidity):
     mock_bme280.get_humidity.return_value = humidity
 
     sensor = humidity_sensors.BME280HumiditySensor(mock_bme280)
-    assert sensor.read() == humidity
+    assert sensor.concrete_read() == humidity
 
 
 def test_bme280_humidity_sensor_unit():

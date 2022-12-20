@@ -9,7 +9,7 @@ def test_bme280_temp_reader_get_temp(temperature):
     mock_bme280.get_temperature.return_value = temperature
 
     temp_reader = temperature_sensors.BME280TemperatureSensor(mock_bme280)
-    assert temp_reader.read() == temperature
+    assert temp_reader.concrete_read() == temperature
 
 
 def test_bme280_read_unit():

@@ -9,7 +9,7 @@ import abc
 class Sensor(abc.ABC):
 
     @abc.abstractmethod
-    def read(self) -> Any:
+    def concrete_read(self) -> Any:
         pass
 
     @property

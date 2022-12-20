@@ -7,28 +7,27 @@ import pytest
 
 @patch("time.sleep")
 @pytest.mark.parametrize("timestep_s", [10.0, 30.0])
-@pytest.mark.parametrize("temp_degc", [20.0, 35.5])
-@pytest.mark.parametrize("humid_rh", [40.1, 60.4])
-def test_step(mock_time, timestep_s, temp_degc, humid_rh, capsys):
-    sensors_list = [
-        fake_sensor.FakeSensor(),
-        fake_sensor.FakeSensor()
-    ]
-    
-    app = monitor.Monitor(sensors_list, timestep_s)
+def test_step(mock_time, timestep_s, capsys):
 
-    def fake_temp_return():
-        return temp_degc
+    fake_sensor_instance = fake_sensor.FakeSensor()
 
-    def fake_humid_return():
-        return humid_rh
+    with patch.object(fake_sensor_instance, "read"):
 
-    with patch.object(sensors_list[0], "read", side_effect = fake_temp_return), \
-        patch.object(sensors_list[1], "read", side_effect = fake_humid_return):
+        sensors = {
+            "sensor1": fake_sensor.FakeSensor(),
+            "sensor2": fake_sensor.FakeSensor(),
+            "sensor3": fake_sensor.FakeSensor()
+        }
 
-        app.step(timestep_s)
+        app = monitor.Monitor(sensors, timestep_s)
+        app.step()
+
+        expected = ""
+
+        for sensor in sensors:
+            expected = expected + f"{sensor}: 0 fake unit\n"
 
         captured = capsys.readouterr()
-        assert captured.out == f"Temperature: {temp_degc} degC, Humidity: {humid_rh} %RH\n"
+        assert captured.out == expected
 
         mock_time.assert_called_with(timestep_s)

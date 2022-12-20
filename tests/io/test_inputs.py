@@ -14,17 +14,3 @@ def test_inputs_dataclass_names() -> None:
     actual_field_names =  [field.name for field in dataclasses.fields(inputs.Inputs)]
 
     assert expected_field_names == actual_field_names
-
-
-@pytest.mark.skip
-def test_print_inputs(capsys) -> None:
-    inputs_dataclass = inputs.Inputs(
-        fake_sensor.FakeSensor(),
-        fake_sensor.FakeSensor()
-    )
-
-    inputs.print_inputs(inputs_dataclass)
-
-    captured = capsys.readouterr()
-
-    expected = ""

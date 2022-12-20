@@ -15,7 +15,7 @@ def test_step(mock_time, timestep_s, temp_degc, humid_rh, capsys):
         fake_sensor.FakeSensor()
     )
     
-    app = application.Application(inputs_dataclass)
+    app = application.Application(inputs_dataclass, timestep_s)
 
     def fake_temp_return():
         return temp_degc

@@ -1,3 +1,7 @@
+"""
+Defines the hardware inputs.
+"""
+
 import dataclasses
 from room_monitor.io.sensors import sensor
 

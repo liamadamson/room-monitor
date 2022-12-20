@@ -10,12 +10,12 @@ import pytest
 @pytest.mark.parametrize("temp_degc", [20.0, 35.5])
 @pytest.mark.parametrize("humid_rh", [40.1, 60.4])
 def test_step(mock_time, timestep_s, temp_degc, humid_rh, capsys):
-    app = application.Application()
-
     inputs_dataclass = inputs.Inputs(
         fake_sensor.FakeSensor(),
         fake_sensor.FakeSensor()
     )
+    
+    app = application.Application(inputs_dataclass)
 
     def fake_temp_return():
         return temp_degc
@@ -26,7 +26,7 @@ def test_step(mock_time, timestep_s, temp_degc, humid_rh, capsys):
     with patch.object(inputs_dataclass.room_temperature, "read", side_effect = fake_temp_return), \
         patch.object(inputs_dataclass.room_humidity, "read", side_effect = fake_humid_return):
 
-        app.step(timestep_s, inputs_dataclass)
+        app.step(timestep_s)
 
         captured = capsys.readouterr()
         assert captured.out == f"Temperature: {temp_degc} degC, Humidity: {humid_rh} %RH\n"

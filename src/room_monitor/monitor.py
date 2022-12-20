@@ -2,7 +2,7 @@
 Contains the main Application object.
 """
 
-from room_monitor.io import inputs
+from room_monitor.io.sensors import sensor
 import time
 
 class Monitor:
@@ -10,8 +10,8 @@ class Monitor:
     Main application object.
     """
 
-    def __init__(self, inputs_dataclass: inputs.Inputs, timestep_s: float) -> None:
-        self._inputs_dataclass = inputs_dataclass
+    def __init__(self, sensors: list[sensor.Sensor], timestep_s: float) -> None:
+        self._sensors = sensors
         self._timestep_s = timestep_s
 
     def run(self) -> None:
@@ -25,10 +25,10 @@ class Monitor:
         time.sleep(timestep_s)
 
     def get_temperature(self) -> float:
-        return self._inputs_dataclass.room_temperature.read()
+        return self._sensors[0].read()
 
     def get_humidity(self) -> float:
-        return self._inputs_dataclass.room_humidity.read()
+        return self._sensors[1].read()
 
     def _print_temperature_and_humidity(self, temperature_deg_c: float, humidity_rh: float) -> None:
         print(f"Temperature: {temperature_deg_c} degC, Humidity: {humidity_rh} %RH")

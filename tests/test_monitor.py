@@ -1,5 +1,4 @@
 from room_monitor import monitor
-from room_monitor.io import inputs  
 from room_monitor.io.sensors import fake_sensor
 from unittest.mock import patch
 import pytest

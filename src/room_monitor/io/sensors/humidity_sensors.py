@@ -12,6 +12,7 @@ class BME280HumiditySensor(sensor.Sensor):
     """
 
     def __init__(self, bme_280: bme280.BME280) -> None:
+        super().__init__()
         self._bme_280 = bme_280
 
     def concrete_read(self) -> float:

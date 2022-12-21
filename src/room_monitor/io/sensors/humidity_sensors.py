@@ -6,7 +6,7 @@ from room_monitor.io.sensors import sensor
 import bme280 # type: ignore
 
 
-class BME280HumiditySensor(sensor.Sensor):
+class BME280HumiditySensor(sensor.Sensor[float]):
     """
     Used to read the humidity, in percentage relative humidity, from a BME280.
     """

@@ -11,7 +11,7 @@ import bme280 # type: ignore
 import smbus2
 
 
-def get_sensors() -> Dict[str, sensor.Sensor]:
+def get_sensors() -> Dict[str, sensor.Sensor[float]]:
     i2c_bus = smbus2.SMBus(1)
     bme280_device = bme280.BME280(i2c_dev=i2c_bus)
 

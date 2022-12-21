@@ -2,20 +2,23 @@
 Defines an abstract sensor.
 """
 
-from typing import Optional
+from typing import Optional, Generic, TypeVar
 import abc
 
 
-class Sensor(abc.ABC):
+T = TypeVar("T")
+
+
+class Sensor(abc.ABC, Generic[T]):
     """
     Users of this abstract class should override "concrete_read", not "read".
     """
 
     def __init__(self) -> None:
-        self._last_val: Optional[float] = None
+        self._last_val: Optional[T] = None
 
     @abc.abstractmethod
-    def concrete_read(self) -> float:
+    def concrete_read(self) -> T:
         pass
 
     @property
@@ -24,9 +27,9 @@ class Sensor(abc.ABC):
         pass
 
     @property
-    def last_value(self) -> Optional[float]:
+    def last_value(self) -> Optional[T]:
         return self._last_val
 
-    def read(self) -> float:
+    def read(self) -> T:
         self._last_val = self.concrete_read()
         return self._last_val

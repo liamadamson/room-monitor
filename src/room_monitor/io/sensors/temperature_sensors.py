@@ -6,7 +6,7 @@ from room_monitor.io.sensors import sensor
 import bme280 # type: ignore
 
 
-class BME280TemperatureSensor(sensor.Sensor):
+class BME280TemperatureSensor(sensor.Sensor[float]):
     """
     Used to read the temperature, in degrees C, from a BME280 temperature sensor.
     """

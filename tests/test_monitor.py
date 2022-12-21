@@ -1,5 +1,6 @@
 from room_monitor import monitor
 from room_monitor.io.sensors import fake_sensor
+from room_monitor.io import input
 from unittest.mock import patch
 import pytest
 
@@ -8,28 +9,24 @@ import pytest
 @pytest.mark.parametrize("timestep_s", [10.0, 30.0])
 def test_step(mock_time, timestep_s, capsys):
 
-    fake_sensor_instance = fake_sensor.FakeSensor()
+    monitor_inputs = [
+        input.Input("input_1", fake_sensor.FakeSensor()),
+        input.Input("input_1", fake_sensor.FakeSensor()),
+        input.Input("input_1", fake_sensor.FakeSensor()),
+    ]
 
-    with patch.object(fake_sensor_instance, "read"):
+    monitor_instance = monitor.Monitor(monitor_inputs, timestep_s)
+    monitor_instance.step()
 
-        sensors = {
-            "sensor1": fake_sensor.FakeSensor(),
-            "sensor2": fake_sensor.FakeSensor(),
-            "sensor3": fake_sensor.FakeSensor()
-        }
+    expected = ""
 
-        app = monitor.Monitor(sensors, timestep_s)
-        app.step()
+    for input_it in monitor_inputs:
+        expected = expected + f"{input_it.name}: 0 {input_it.unit}\n"
 
-        expected = ""
+    captured = capsys.readouterr()
+    assert captured.out == expected
 
-        for sensor in sensors:
-            expected = expected + f"{sensor}: 0 fake unit\n"
-
-        captured = capsys.readouterr()
-        assert captured.out == expected
-
-        mock_time.assert_called_with(timestep_s)
+    mock_time.assert_called_with(timestep_s)
 
 
 @pytest.mark.parametrize("timestep_s", [-15, 0])

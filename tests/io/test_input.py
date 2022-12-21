@@ -1,4 +1,5 @@
 from room_monitor.io import input
+from room_monitor.io.sensors import fake_sensor
 from unittest.mock import Mock
 import pytest
 
@@ -8,6 +9,12 @@ def test_input_name(name):
     mock_sensor = Mock()
     input_instance = input.Input(name, mock_sensor)
     assert input_instance.name == name
+
+
+def test_get_unit():
+    input_instance = input.Input("fake_input", fake_sensor.FakeSensor())
+
+    input_instance.unit == "fake unit"
 
 
 def test_update_calls_sensor_read():

@@ -26,3 +26,7 @@ class Input(Generic[T]):
     @property
     def last_value(self) -> Optional[T]:
         return self._last_value
+
+    @property
+    def unit(self) -> str:
+        return self._sensor.unit

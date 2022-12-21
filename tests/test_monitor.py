@@ -1,6 +1,6 @@
 from room_monitor import monitor
 from room_monitor.io.sensors import fake_sensor
-from room_monitor.io import input
+from room_monitor.io import monitor_input
 from unittest.mock import patch
 import pytest
 
@@ -10,9 +10,9 @@ import pytest
 def test_step(mock_time, timestep_s, capsys):
 
     monitor_inputs = [
-        input.Input("input_1", fake_sensor.FakeSensor()),
-        input.Input("input_1", fake_sensor.FakeSensor()),
-        input.Input("input_1", fake_sensor.FakeSensor()),
+        monitor_input.MonitorInput("input_1", fake_sensor.FakeSensor()),
+        monitor_input.MonitorInput("input_1", fake_sensor.FakeSensor()),
+        monitor_input.MonitorInput("input_1", fake_sensor.FakeSensor()),
     ]
 
     monitor_instance = monitor.Monitor(monitor_inputs, timestep_s)

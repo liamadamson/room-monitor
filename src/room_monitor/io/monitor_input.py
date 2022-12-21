@@ -1,3 +1,7 @@
+"""
+Defines an abstract monitor input.
+"""
+
 from typing import Generic, TypeVar, Optional
 from room_monitor.io.sensors import sensor
 
@@ -5,11 +9,11 @@ from room_monitor.io.sensors import sensor
 T = TypeVar("T")
 
 
-class Input(Generic[T]):
+class MonitorInput(Generic[T]):
 
-    def __init__(self, name: str, sensor: sensor.Sensor[T]) -> None:
+    def __init__(self, name: str, input_sensor: sensor.Sensor[T]) -> None:
         self._name = name
-        self._sensor = sensor
+        self._sensor = input_sensor
         self._last_value: Optional[T] = None
 
     def read(self) -> Optional[T]:

@@ -3,7 +3,7 @@ Contains a Monitor object, which is used for reading from sensors and printing v
 """
 
 from typing import List, Any
-from room_monitor.io import input
+from room_monitor.io import monitor_input
 import time
 
 class Monitor:
@@ -19,7 +19,7 @@ class Monitor:
         while True:
             monitor.step()
     """
-    def __init__(self, inputs: List[input.Input[Any]], timestep_s: float) -> None:
+    def __init__(self, inputs: List[monitor_input.MonitorInput[Any]], timestep_s: float) -> None:
         """
         :param sensors: Dictionary of sensors to monitor.
         :timestep_s: Time between succesive sensor reads, in seconds.

@@ -1,4 +1,6 @@
 from typing import Any
+import datetime
+import freezegun
 from unittest.mock import patch, Mock, call
 from room_monitor import logging
 from room_monitor.io import monitor_input
@@ -54,9 +56,13 @@ def test_print_log_handler(mock_print):
 
     print_log_handler = logging.PrintLogHandler()
 
-    print_log_handler.log(inputs)
+    freeze_time = datetime.datetime(2022, 12, 23, 9, 0 ,0)
+
+    with freezegun.freeze_time(freeze_time):
+        print_log_handler.log(inputs)
 
     calls = [
+        call(f"========== {freeze_time} =========="),
         call("mock_1: 20.5 fake_unit_1"),
         call("mock_2: 40 fake_unit_2")
     ]

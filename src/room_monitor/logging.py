@@ -3,6 +3,7 @@ For logging monitor inputs.
 """
 
 import abc
+import datetime
 from typing import Sequence, Any
 from room_monitor.io import monitor_input
 
@@ -27,5 +28,10 @@ class InputLogger:
 class PrintLogHandler(LogHandler):
 
     def log(self, inputs: Sequence[monitor_input.MonitorInput[Any]]) -> None:
+        self._print_header()
+
         for input_it in inputs:
             print(f"{input_it.name}: {input_it.last_value} {input_it.unit}")
+
+    def _print_header(self) -> None:
+        print(f"========== {datetime.datetime.now()} ==========")

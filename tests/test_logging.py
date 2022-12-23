@@ -50,7 +50,7 @@ def test_input_logger_log():
 @patch('builtins.print')
 def test_print_log_handler(mock_print):
     inputs = [
-        MockInput("mock_1", "fake_unit_1", 20.5),
+        MockInput("mock_1", "fake_unit_1", 20.6),
         MockInput("mock_2", "fake_unit_2", 40)
     ]
 
@@ -63,7 +63,7 @@ def test_print_log_handler(mock_print):
 
     calls = [
         call(f"========== {freeze_time} =========="),
-        call("mock_1: 20.5 fake_unit_1"),
+        call("mock_1: 20.6 fake_unit_1"),
         call("mock_2: 40 fake_unit_2")
     ]
 

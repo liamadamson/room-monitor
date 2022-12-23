@@ -8,4 +8,4 @@ RUN pip install -r requirements.txt
 
 ENV PYTHONPATH = "${PYTHONPATH}:/code/src"
 
-CMD ["python -m room_monitor"]
+CMD ["python3 -m room_monitor"]

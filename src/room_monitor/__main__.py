@@ -43,3 +43,5 @@ def main() -> None:
         input_scheduler.update_inputs()
         logger.log(inputs)
         input_scheduler.sleep_until_ready()
+
+main()

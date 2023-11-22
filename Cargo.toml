@@ -1,0 +1,5 @@
+[package]
+name = "room-monitor"
+version = "0.1.0"
+
+[dependencies]

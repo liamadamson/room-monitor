@@ -1,71 +1,11 @@
 on:
   push:
+    branches-ignore:
+      - master
   pull_request:
 name: Main workflow
 jobs:
-  tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Install rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          override: true
-          toolchain: stable
-
-      - uses: Swatinem/rust-cache@v2
-
-      - name: Run tests
-        run: cargo test --verbose --all --all-features
-  check:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Install rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          override: true
-          toolchain: stable
-
-      - uses: Swatinem/rust-cache@v2
-
-      - name: Run check
-        run: cargo check --verbose --all --all-features
-  fmt:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Install rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          override: true
-          components: rustfmt
-          toolchain: stable
-
-      - uses: Swatinem/rust-cache@v2
-
-      - name: Run fmt
-        run: cargo fmt --all --check --verbose
-  clippy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Install rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          override: true
-          components: clippy
-          toolchain: stable
-
-      - uses: Swatinem/rust-cache@v2
-
-      - name: Run clippy
-        run: cargo clippy
+  check-and-lint:
+    uses: ./.github/workflows/check_and_lint.yml
+  test:
+    uses: ./.github/workflows/test.yml

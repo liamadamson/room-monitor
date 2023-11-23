@@ -3,10 +3,8 @@ on:
     secrets:
       BALENA_TOKEN:
         required: true
-        type: string
       BALENA_FLEET:
         required: true
-        type: string
 name: Deploy to Balena
 jobs:
   balena-deploy:

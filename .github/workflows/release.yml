@@ -14,3 +14,9 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  balena-release:
+    needs: [check-and-lint, test]
+    uses: ./.github/workflows/balena.yml
+    secrets:
+      BALENA_TOKEN: ${{ secrets.BALENA_TOKEN }}
+      BALENA_FLEET: ${{ secrets.BALENA_FLEET }}

@@ -4,7 +4,7 @@ use driver::{get_bme280_driver, BME280Driver};
 use std::thread::sleep;
 use std::time::Duration;
 
-const LOOP_RATE_S: u64 = 1;
+const LOOP_RATE_S: u64 = 5 * 60;
 
 fn main() {
     setup_logging();

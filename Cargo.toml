@@ -3,3 +3,11 @@ name = "room-monitor"
 version = "0.1.0"
 
 [dependencies]
+anyhow = "1.0.75"
+env_logger = "0.10.1"
+log = "0.4.20"
+mockall = "0.11.4"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+bme280 = "0.4.4"
+linux-embedded-hal = "0.4.0-alpha.2"

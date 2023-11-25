@@ -32,7 +32,7 @@ fn get_measurement_rate() -> u64 {
             Ok(rate) => {
                 log::info!("Using MEASUREMENT_RATE_S of {}", rate);
                 rate
-            },
+            }
             Err(_) => {
                 log::warn!(
                     "MEASUREMENT_RATE_S is not a valid integer, using default of {}",

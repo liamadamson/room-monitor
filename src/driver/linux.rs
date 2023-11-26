@@ -1,5 +1,5 @@
-extern crate bme280;
-extern crate linux_embedded_hal as hal;
+use bme280;
+use linux_embedded_hal as hal;
 
 use super::{BME280Driver, Readings};
 

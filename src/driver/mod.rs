@@ -20,6 +20,7 @@ pub fn get_bme280_driver() -> anyhow::Result<impl BME280Driver> {
     Ok(driver)
 }
 
+#[derive(serde::Serialize)]
 pub struct Readings {
     pub temperature: f32,
     pub pressure: f32,

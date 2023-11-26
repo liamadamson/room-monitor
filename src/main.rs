@@ -130,6 +130,20 @@ fn set_credential(env_var: &str, file_name: &str) {
             let engine = base64::engine::general_purpose::STANDARD;
             match engine.decode(val) {
                 Ok(decoded) => {
+                    // Create the directory if it doesn't exist.
+                    if let Some(parent) = std::path::Path::new(file_name).parent() {
+                        if !parent.exists() {
+                            if let Err(e) = std::fs::create_dir_all(parent) {
+                                log::error!(
+                                    "Failed to create directory {}: {}",
+                                    parent.display(),
+                                    e
+                                );
+                                std::process::exit(1);
+                            }
+                        }
+                    }
+
                     if let Err(e) = std::fs::write(file_name, decoded) {
                         log::error!("Failed to write {} to {}: {}", env_var, file_name, e);
                         std::process::exit(1);

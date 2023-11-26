@@ -1,36 +1,36 @@
-use bme280;
-use linux_embedded_hal as hal;
-
-use super::{BME280Driver, Readings};
+use super::{BME280Driver, Reading};
+use bme280::i2c::BME280;
+use linux_embedded_hal::{Delay, I2cdev};
 
 pub struct LinuxBME280Driver {
-    bme280: bme280::i2c::BME280<hal::I2cdev>,
+    bme280: BME280<I2cdev>,
 }
 
 impl LinuxBME280Driver {
     pub fn new() -> anyhow::Result<Self> {
-        match hal::I2cdev::new("/dev/i2c-1") {
-            Ok(i2c_bus) => {
-                let mut bme280 = bme280::i2c::BME280::new_primary(i2c_bus);
-                match bme280.init(&mut hal::Delay) {
-                    Ok(_) => Ok(Self { bme280 }),
-                    Err(_) => Err(anyhow::anyhow!("Failed to init BME280.")),
-                }
-            }
-            Err(_) => Err(anyhow::anyhow!("Failed to open I2C bus.")),
-        }
+        let i2c_bus =
+            I2cdev::new("/dev/i2c-1").map_err(|_| anyhow::anyhow!("Failed to open I2C bus."))?;
+
+        let mut bme280 = BME280::new_primary(i2c_bus);
+        bme280
+            .init(&mut Delay)
+            .map_err(|_| anyhow::anyhow!("Failed to init BME280."))?;
+
+        Ok(Self { bme280 })
     }
 }
 
 impl BME280Driver for LinuxBME280Driver {
-    fn read(&mut self) -> anyhow::Result<Readings> {
-        match self.bme280.measure(&mut hal::Delay) {
-            Ok(measurements) => Ok(Readings {
-                temperature: measurements.temperature,
-                pressure: measurements.pressure,
-                humidity: measurements.humidity,
-            }),
-            Err(_) => Err(anyhow::anyhow!("Failed to read measurements.")),
-        }
+    fn read(&mut self) -> anyhow::Result<Reading> {
+        let measurements = self
+            .bme280
+            .measure(&mut Delay)
+            .map_err(|_| anyhow::anyhow!("Failed to read measurements."))?;
+
+        Ok(Reading {
+            temperature: measurements.temperature,
+            pressure: measurements.pressure,
+            humidity: measurements.humidity,
+        })
     }
 }

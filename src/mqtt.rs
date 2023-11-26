@@ -1,6 +1,10 @@
-use super::ReadingsSender;
+use super::ReadingSender;
 use paho_mqtt as mqtt;
 use serde_json;
+use std::thread::sleep;
+use std::time::Duration;
+
+const INIT_CONNECT_RETRY_DELAY_S: u64 = 5;
 
 pub struct MQTTReadingsSender {
     client: mqtt::Client,
@@ -12,39 +16,29 @@ impl MQTTReadingsSender {
         server_uri: &str,
         client_id: &str,
         topic: &str,
-        ca_file: &str,
-        key_store_file: &str,
-        private_key_file: &str,
+        ca_path: &str,
+        key_store_path: &str,
+        private_key_path: &str,
     ) -> anyhow::Result<Self> {
-        match Self::create_mqtt_client(server_uri, client_id) {
-            Ok(client) => {
-                match Self::get_connection_opts(ca_file, key_store_file, private_key_file) {
-                    Ok(connection_opts) => loop {
-                        match client.connect(connection_opts.clone()) {
-                            Ok(_) => {
-                                log::info!("Connected to MQTT broker");
+        let client = Self::create_mqtt_client(server_uri, client_id)?;
+        let conn_opts = Self::get_connection_opts(ca_path, key_store_path, private_key_path)?;
 
-                                return Ok(Self {
-                                    client,
-                                    topic: topic.to_string(),
-                                });
-                            }
-                            Err(e) => {
-                                log::warn!(
-                                    "Failed to connect to MQTT broker, retrying in 5 seconds: {}",
-                                    e
-                                );
-                                std::thread::sleep(std::time::Duration::from_secs(5));
-                            }
-                        }
-                    },
-                    Err(e) => Err(anyhow::anyhow!(
-                        "Failed to create MQTT connection options: {}",
-                        e
-                    )),
+        loop {
+            match client.connect(conn_opts.clone()) {
+                Ok(_) => {
+                    log::info!("Connected to MQTT broker.");
+
+                    return Ok(Self {
+                        client,
+                        topic: topic.to_string(),
+                    });
+                }
+                Err(e) => {
+                    log::warn!("Failed to connect to broker: {}", e,);
+                    sleep(Duration::from_secs(INIT_CONNECT_RETRY_DELAY_S));
+                    log::info!("Retrying in {} seconds.", INIT_CONNECT_RETRY_DELAY_S);
                 }
             }
-            Err(e) => Err(anyhow::anyhow!("Failed to create MQTT client: {}", e)),
         }
     }
 
@@ -58,14 +52,14 @@ impl MQTTReadingsSender {
     }
 
     pub fn get_connection_opts(
-        ca_file: &str,
-        key_store_file: &str,
-        private_key_file: &str,
+        ca_path: &str,
+        key_store_path: &str,
+        private_key_path: &str,
     ) -> Result<mqtt::ConnectOptions, mqtt::Error> {
         let ssl_opts = mqtt::SslOptionsBuilder::new()
-            .trust_store(ca_file)?
-            .key_store(key_store_file)?
-            .private_key(private_key_file)?
+            .trust_store(ca_path)?
+            .key_store(key_store_path)?
+            .private_key(private_key_path)?
             .finalize();
 
         Ok(mqtt::ConnectOptionsBuilder::new()
@@ -74,22 +68,24 @@ impl MQTTReadingsSender {
     }
 }
 
-impl ReadingsSender for MQTTReadingsSender {
-    fn send_readings(&self, readings: &crate::driver::Readings) -> anyhow::Result<()> {
-        let payload = serde_json::to_string(readings).unwrap();
+const MQTT_QOS: i32 = 1; // At least once.
+
+impl ReadingSender for MQTTReadingsSender {
+    fn send_reading<T: serde::Serialize>(&self, reading: &T) -> anyhow::Result<()> {
+        let payload = serde_json::to_string(reading)
+            .map_err(|e| anyhow::anyhow!("Failed to serialize readings to JSON: {}", e))?;
 
         let msg = mqtt::MessageBuilder::new()
             .topic(&self.topic)
             .payload(payload)
-            .qos(1)
+            .qos(MQTT_QOS)
             .finalize();
 
         if !self.client.is_connected() {
-            log::info!("MQTT client is not connected, trying to reconnect.");
+            log::info!("MQTT client not connected. Trying to reconnect.");
 
-            // Try to reconnect once.
             match self.client.reconnect() {
-                Ok(_) => log::info!("MQTT client reconnected"),
+                Ok(_) => log::info!("MQTT client reconnected."),
                 Err(e) => {
                     log::warn!("Failed to reconnect MQTT client: {}", e);
                     return Err(anyhow::anyhow!("Failed to reconnect MQTT client"));
@@ -97,9 +93,10 @@ impl ReadingsSender for MQTTReadingsSender {
             }
         }
 
-        match self.client.publish(msg) {
-            Ok(_) => Ok(()),
-            Err(e) => Err(anyhow::anyhow!("Failed to publish MQTT message: {}", e)),
+        if let Err(e) = self.client.publish(msg) {
+            return Err(anyhow::anyhow!("Failed to publish MQTT message: {}", e));
         }
+
+        Ok(())
     }
 }

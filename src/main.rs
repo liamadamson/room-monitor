@@ -1,4 +1,5 @@
 pub mod driver;
+pub mod mqtt;
 
 use driver::{get_bme280_driver, BME280Driver};
 use std::env;
@@ -19,7 +20,7 @@ fn main() {
 
     loop {
         if let Err(e) = runner.step() {
-            log::error!("Error steppinf runner: {}", e);
+            log::error!("Error stepping runner: {}", e);
         }
 
         sleep(Duration::from_secs(measurement_rate_s));
@@ -84,4 +85,8 @@ where
         );
         Ok(())
     }
+}
+
+pub trait ReadingsSender {
+    fn send_readings(&self, readings: &driver::Readings) -> anyhow::Result<()>;
 }

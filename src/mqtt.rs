@@ -70,7 +70,6 @@ impl MQTTReadingsSender {
 
         Ok(mqtt::ConnectOptionsBuilder::new()
             .ssl_options(ssl_opts)
-            .clean_session(true)
             .finalize())
     }
 }

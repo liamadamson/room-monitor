@@ -79,7 +79,7 @@ fn get_measurement_rate() -> u64 {
 fn setup_logging() {
     let mut builder = env_logger::Builder::from_default_env();
     builder
-        .filter_level(log::LevelFilter::Info)
+        .filter_level(log::LevelFilter::Debug)
         .target(env_logger::Target::Stdout)
         .init();
 }

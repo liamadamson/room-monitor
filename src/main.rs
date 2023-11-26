@@ -79,7 +79,7 @@ fn get_measurement_rate() -> u64 {
 fn setup_logging() {
     let mut builder = env_logger::Builder::from_default_env();
     builder
-        .filter_level(log::LevelFilter::Debug)
+        .filter_level(log::LevelFilter::Info)
         .target(env_logger::Target::Stdout)
         .init();
 }
@@ -113,6 +113,8 @@ where
                 readings.pressure,
                 readings.humidity
             );
+        } else {
+            log::info!("Successfully sent readings");
         }
 
         Ok(())

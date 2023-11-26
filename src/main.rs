@@ -128,8 +128,22 @@ fn set_credential(env_var: &str, file_name: &str) {
         Ok(val) => {
             // Write the contents of base64-encoded env var to a file.
             let engine = base64::engine::general_purpose::STANDARD;
-            let decoded = engine.decode(val).unwrap();
-            std::fs::write(file_name, decoded).unwrap();
+            match engine.decode(val) {
+                Ok(decoded) => {
+                    if let Err(e) = std::fs::write(file_name, decoded) {
+                        log::error!("Failed to write {} to {}: {}", env_var, file_name, e);
+                        std::process::exit(1);
+                    }
+                }
+                Err(e) => {
+                    log::error!(
+                        "Env variable {} is not a valid base64 string: {}",
+                        env_var,
+                        e
+                    );
+                    std::process::exit(1);
+                }
+            }
         }
         Err(_) => {
             log::error!("{} not set", env_var);

@@ -87,7 +87,7 @@ fn setup_logging() {
 struct Runner<T, U>
 where
     T: BME280Driver,
-    U: ReadingsSender,
+    U: ReadingSender,
 {
     driver: T,
     sender: U,
@@ -96,7 +96,7 @@ where
 impl<T, U> Runner<T, U>
 where
     T: BME280Driver,
-    U: ReadingsSender,
+    U: ReadingSender,
 {
     fn new(driver: T, sender: U) -> Self {
         Self { driver, sender }
@@ -105,7 +105,7 @@ where
     fn step(&mut self) -> anyhow::Result<()> {
         let readings = self.driver.read()?;
 
-        if let Err(e) = self.sender.send_readings(&readings) {
+        if let Err(e) = self.sender.send_reading(&readings) {
             log::warn!("Failed to send readings: {}", e);
             log::info!(
                 "Unsent reading: temperature: {}, pressure: {}, humidity: {}",
@@ -121,8 +121,8 @@ where
     }
 }
 
-pub trait ReadingsSender {
-    fn send_readings(&self, readings: &driver::Readings) -> anyhow::Result<()>;
+pub trait ReadingSender {
+    fn send_reading<T: serde::Serialize>(&self, readings: &T) -> anyhow::Result<()>;
 }
 
 fn set_credential(env_var: &str, file_name: &str) {
